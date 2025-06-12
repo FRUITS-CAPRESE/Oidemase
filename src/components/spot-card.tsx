@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -55,7 +56,7 @@ export function SpotCard({
   const SpotIcon = spot.icon;
 
   return (
-    <Card className={`w-full shadow-lg transition-all duration-300 ease-in-out ${isSelected ? 'ring-2 ring-primary_blue_700 shadow-xl' : 'hover:shadow-md'}`}>
+    <Card className={`w-full shadow-lg transition-all duration-300 ease-in-out ${isSelected ? 'ring-2 ring-primary shadow-xl' : 'hover:shadow-md'}`}>
       <CardHeader className="flex flex-row items-start gap-4 p-4">
         <div className="flex-shrink-0">
           <Image
