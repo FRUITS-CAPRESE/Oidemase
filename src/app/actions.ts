@@ -1,3 +1,4 @@
+
 'use server';
 
 import { predictCongestion as predictCongestionFlow, type PredictCongestionInput, type PredictCongestionOutput } from '@/ai/flows/congestion-prediction';
@@ -20,8 +21,8 @@ export async function predictSpotCongestion(spotName: string): Promise<PredictCo
     return await predictCongestionFlow(input);
   } catch (error) {
     console.error("Error predicting congestion:", error);
-    // Return a default error state or rethrow
-    throw new Error("Failed to predict congestion. Please try again.");
+    // Rethrow the original error for more specific client-side handling
+    throw error;
   }
 }
 
@@ -40,7 +41,8 @@ export async function recommendAlternativeSpots(
     return await alternativeSpotRecommendationsFlow(input);
   } catch (error) {
     console.error("Error recommending alternative spots:", error);
-    // Return a default error state or rethrow
-    throw new Error("Failed to recommend alternative spots. Please try again.");
+    // Rethrow the original error for more specific client-side handling
+    throw error;
   }
 }
+
