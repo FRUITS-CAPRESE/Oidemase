@@ -1,1 +1,6 @@
-// Flows will be imported for their side effects in this file.
+import { config } from 'dotenv';
+config();
+
+import '@/ai/flows/congestion-prediction.ts';
+import '@/ai/flows/similarity-judgment.ts';
+import '@/ai/flows/alternative-spot-recommendations.ts';
