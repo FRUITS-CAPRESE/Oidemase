@@ -23,9 +23,14 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
         <header className="bg-primary text-primary-foreground p-4 shadow-md">
-          <div className="container mx-auto flex items-center gap-2">
-            <Compass size={28} />
-            <h1 className="text-2xl font-headline font-bold">Oidemase Japan</h1>
+          <div className="container mx-auto">
+            <div className="flex items-center gap-2">
+              <Compass size={28} />
+              <div>
+                <p className="text-xs text-primary-foreground/80">"Oidemase" means "Welcome!"</p>
+                <h1 className="text-2xl font-headline font-bold">Oidemase Japan</h1>
+              </div>
+            </div>
           </div>
         </header>
         <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
