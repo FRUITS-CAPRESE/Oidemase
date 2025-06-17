@@ -1,11 +1,12 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Compass } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Hakodate AI Guide',
-  description: 'AI-powered travel assistant for Hakodate',
+  title: 'Oidemase Japan',
+  description: 'AI-powered travel assistant for Japan',
 };
 
 export default function RootLayout({
@@ -24,7 +25,7 @@ export default function RootLayout({
         <header className="bg-primary text-primary-foreground p-4 shadow-md">
           <div className="container mx-auto flex items-center gap-2">
             <Compass size={28} />
-            <h1 className="text-2xl font-headline font-bold">Hakodate AI Guide</h1>
+            <h1 className="text-2xl font-headline font-bold">Oidemase Japan</h1>
           </div>
         </header>
         <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
@@ -32,7 +33,7 @@ export default function RootLayout({
         </main>
         <Toaster />
         <footer className="bg-muted text-muted-foreground p-4 text-center text-sm">
-          © {new Date().getFullYear()} Hakodate AI Guide. All rights reserved.
+          © {new Date().getFullYear()} Oidemase Japan. All rights reserved.
         </footer>
       </body>
     </html>
