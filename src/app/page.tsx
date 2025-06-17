@@ -14,6 +14,22 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardFooter } from "@/components/ui/card";
 import { CongestionHeatmap } from '@/components/congestion-heatmap';
 
+// Helper function to generate a more user-friendly API error message
+const getApiErrorMessage = (error: unknown): string => {
+  const defaultUserMessage = "Failed to process your request. Please try again.";
+  if (error instanceof Error) {
+    const message = error.message.toLowerCase();
+    if (message.includes("service unavailable") || message.includes("overloaded") || message.includes("503")) {
+      return "The AI service is temporarily busy. Please try again in a few moments.";
+    }
+    // Return a generic message for other errors to avoid exposing too many technical details,
+    // but keep the original error.message if it's short and potentially informative.
+    return error.message.length > 100 ? defaultUserMessage : error.message;
+  }
+  return defaultUserMessage;
+};
+
+
 export default function HomePage() {
   const [selectedSpot, setSelectedSpot] = useState<TouristSpot | null>(null);
   const [congestionInfo, setCongestionInfo] = useState<CongestionInfo | null>(null);
@@ -97,7 +113,7 @@ export default function HomePage() {
             toast({
               variant: "destructive",
               title: "Error",
-              description: (error as Error).message || "Failed to predict congestion.",
+              description: getApiErrorMessage(error),
             });
           }
         });
@@ -128,7 +144,7 @@ export default function HomePage() {
         toast({
             variant: "destructive",
             title: "Error",
-            description: (error as Error).message || "Failed to find alternative spots.",
+            description: getApiErrorMessage(error),
         });
       }
     });
