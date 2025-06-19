@@ -1,6 +1,7 @@
 
 'use client';
 
+import { GoogleMap, Marker, useLoadScript, Libraries } from '@react-google-maps/api';
 import { useState, useTransition, useEffect } from 'react';
 import { hakodateSpots } from '@/data/spots';
 import type { TouristSpot, CongestionInfo, AlternativeSpot, CongestionLevel } from '@/lib/types';
@@ -13,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardFooter } from "@/components/ui/card";
 import { CongestionHeatmap } from '@/components/congestion-heatmap';
+import { MapPin } from 'lucide-react';
 
 // Helper function to generate a more user-friendly API error message
 const getApiErrorMessage = (error: unknown): string => {
@@ -29,13 +31,19 @@ const getApiErrorMessage = (error: unknown): string => {
   return defaultUserMessage;
 };
 
+const libraries: Libraries = ['places', 'geometry']; // Add libraries if needed
+
+const mapContainerStyle = {
+  width: '100%',
+  height: '500px',
+};
+
+const center = {
+  lat: 41.7687, // Approximate center of Hakodate
+  lng: 140.7281,
+};
 
 export default function HomePage() {
-  const [selectedSpot, setSelectedSpot] = useState<TouristSpot | null>(null);
-  const [congestionInfo, setCongestionInfo] = useState<CongestionInfo | null>(null);
-  const [alternativeSpots, setAlternativeSpots] = useState<AlternativeSpot[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
   const [allSpotsCongestionData, setAllSpotsCongestionData] = useState<Record<string, CongestionInfo | null>>({});
   const [isLoadingMapData, setIsLoadingMapData] = useState(true);
 
@@ -43,6 +51,11 @@ export default function HomePage() {
   const [isRecommendingAlternatives, startAlternativeRecommendation] = useTransition();
 
   const { toast } = useToast();
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    libraries,
+  });
 
   useEffect(() => {
     const fetchAllCongestion = async () => {
@@ -83,6 +96,10 @@ export default function HomePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); 
 
+  const [selectedSpot, setSelectedSpot] = useState<TouristSpot | null>(null);
+  const [congestionInfo, setCongestionInfo] = useState<CongestionInfo | null>(null);
+  const [alternativeSpots, setAlternativeSpots] = useState<AlternativeSpot[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleSelectSpot = (spot: TouristSpot) => {
     if (selectedSpot?.id === spot.id) {
       setSelectedSpot(null);
@@ -161,6 +178,22 @@ export default function HomePage() {
         </AlertDescription>
       </Alert>
 
+      <div className="mt-8">
+        <h2 className="text-2xl font-headline font-semibold mb-6 text-center md:text-left">Explore on the Map</h2>
+        {loadError && <div>Error loading maps</div>}
+        {!isLoaded && !loadError && <Skeleton className="w-full h-[500px]" />}
+        {isLoaded && (
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={13}
+          >
+            {hakodateSpots.map((spot) => (
+              <Marker key={spot.id} position={spot.location} icon={{ url: '/map_pin_icon.png', scaledSize: new window.google.maps.Size(30, 30) }} onClick={() => handleSelectSpot(spot)} />
+            ))}
+          </GoogleMap>
+        )}
+      </div>
       <CongestionHeatmap
         spots={hakodateSpots}
         congestionData={allSpotsCongestionData}
